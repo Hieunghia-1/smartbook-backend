@@ -1,25 +1,46 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-// Định nghĩa schema cho sản phẩm
-const productSchema = new mongoose.Schema({
-    name: {
+const UserSchema = new mongoose.Schema({
+    username: {
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
     username: {
         type: String,
         required: true,
-        trim: true
+        unique: true
     },
     password: {
-        type: Number,
-        required: true,
-        min: 0
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
+
+// Hash password trước khi lưu
+UserSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        next();
     }
-}, { timestamps: true }); // Tự động thêm thời gian tạo và cập nhật
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
 
-// Tạo model từ schema
-const User = mongoose.model('Users', productSchema);
+// Kiểm tra password
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
 
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);

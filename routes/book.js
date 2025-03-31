@@ -14,10 +14,10 @@ router.get('/books', async (req, res) => {
 
 // Route: Thêm mới sản phẩm
 router.post('/books', async (req, res) => {
-    const { name, category, price, description, imageUrl } = req.body;
+    const { name, category, stock, price, imageUrl } = req.body;
     
     try {
-        const newBook = new Book({ name, category, price, description, imageUrl });
+        const newBook = new Book({ name, category, stock, price, imageUrl });
         await newBook.save();
         res.status(201).json(newBook);
     } catch (error) {
@@ -28,10 +28,10 @@ router.post('/books', async (req, res) => {
 // Route: Cập nhật thông tin sản phẩm
 router.put('/books/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, category, price, description, imageUrl } = req.body;
+    const { name, category, stock, price, imageUrl } = req.body;
     
     try {
-        const book = await Book.findByIdAndUpdate(id, { name, category, price, description, imageUrl }, { new: true });
+        const book = await Book.findByIdAndUpdate(id, { name, category, stock, price, imageUrl }, { new: true });
         res.status(200).json(book);
     } catch (error) {
         res.status(400).json({ message: error.message });
