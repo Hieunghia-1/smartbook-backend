@@ -48,11 +48,11 @@ router.post('/login', async (req, res) => {
     }
 
     // Tạo JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const accToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    res.json({ token });
+    res.json({ token: accToken, user: user});
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server' });
   }

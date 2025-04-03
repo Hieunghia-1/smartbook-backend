@@ -4,10 +4,6 @@ const bcrypt = require('bcryptjs');
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true
-    },
-    username: {
-        type: String,
         required: true,
         unique: true
     },
@@ -20,14 +16,14 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     phone: {
+        type: String
+    }, 
+    role: {
         type: String,
-        required: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
+        enum: ['user', 'admin'], 
+        default: 'user'
+    }
+}, { timestamps: true });
 
 // Hash password trước khi lưu
 UserSchema.pre('save', async function (next) {

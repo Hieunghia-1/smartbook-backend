@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const auth = require('./middlewares/auth');
 
 const app = express();
 
@@ -15,7 +16,8 @@ app.use(cors());
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/manage', require('./routes/book'))
+app.use('/api/manage', auth, require('./routes/book'));
+app.use('/api/manage', auth, require('./routes/user'));
 
 const PORT = process.env.PORT || 3001;
 
