@@ -1,6 +1,7 @@
 const express = require('express');
 const Book = require('../models/Book');  // Import product model
 const router = express.Router();
+const auth = require('../middlewares/auth');
 
 // Route: Lấy tất cả sản phẩm
 router.get('/books', async (req, res) => {
@@ -13,7 +14,7 @@ router.get('/books', async (req, res) => {
 });
 
 // Route: Thêm mới sản phẩm
-router.post('/books', async (req, res) => {
+router.post('/books', auth, async (req, res) => {
     const { name, category, stock, price, imageUrl } = req.body;
     
     try {
@@ -26,7 +27,7 @@ router.post('/books', async (req, res) => {
 });
 
 // Route: Cập nhật thông tin sản phẩm
-router.put('/books/:id', async (req, res) => {
+router.put('/books/:id', auth, async (req, res) => {
     const { id } = req.params;
     const { name, category, stock, price, imageUrl } = req.body;
     
@@ -39,7 +40,7 @@ router.put('/books/:id', async (req, res) => {
 });
 
 // Route: Xóa sản phẩm
-router.delete('/books/:id', async (req, res) => {
+router.delete('/books/:id', auth, async (req, res) => {
     const { id } = req.params;
     
     try {
@@ -49,5 +50,17 @@ router.delete('/books/:id', async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+
+router.post('/books/search', async (req, res) => {
+    const { q } = req.body;
+    
+    try {
+        const books = await Book.findOne({ 'name': q });
+        res.status(200).json({ books: books });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 
 module.exports = router;
