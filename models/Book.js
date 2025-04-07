@@ -28,6 +28,9 @@ const productSchema = new mongoose.Schema({
     }
 }, { timestamps: true }); // Tự động thêm thời gian tạo và cập nhật
 
+// In your Book model file
+productSchema.index({ name: 'text' });
+
 // Tạo model từ schema
 const Book = mongoose.model('Book', productSchema);
 

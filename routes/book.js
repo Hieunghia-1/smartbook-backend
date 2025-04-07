@@ -16,7 +16,7 @@ router.get('/books', async (req, res) => {
 // Route: Thêm mới sản phẩm
 router.post('/books', auth, async (req, res) => {
     const { name, category, stock, price, imageUrl } = req.body;
-    
+
     try {
         const newBook = new Book({ name, category, stock, price, imageUrl });
         await newBook.save();
@@ -30,7 +30,7 @@ router.post('/books', auth, async (req, res) => {
 router.put('/books/:id', auth, async (req, res) => {
     const { id } = req.params;
     const { name, category, stock, price, imageUrl } = req.body;
-    
+
     try {
         const book = await Book.findByIdAndUpdate(id, { name, category, stock, price, imageUrl }, { new: true });
         res.status(200).json(book);
@@ -42,7 +42,7 @@ router.put('/books/:id', auth, async (req, res) => {
 // Route: Xóa sản phẩm
 router.delete('/books/:id', auth, async (req, res) => {
     const { id } = req.params;
-    
+
     try {
         await Book.findByIdAndDelete(id);
         res.status(200).json({ message: 'Product deleted successfully' });
@@ -52,11 +52,14 @@ router.delete('/books/:id', auth, async (req, res) => {
 });
 
 router.post('/books/search', async (req, res) => {
+    console.log('search====',res)
     const { q } = req.body;
-    
+
     try {
-        const books = await Book.findOne({ 'name': q });
-        res.status(200).json({ books: books });
+        const books = await Book.find({
+            $text: { $search: q }
+        });
+        res.status(200).json({books});
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
