@@ -8,7 +8,7 @@ const auth = require('../middlewares/auth');
 // Đăng ký
 router.post('/register', async (req, res) => {
   try {
-    const { name, username, password, email, phone } = req.body;
+    const { fullname, username, password, email, phone } = req.body;
 
     // Kiểm tra user đã tồn tại chưa
     let user = await User.findOne({ username });
@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'User đã tồn tại' });
     }
 
-    user = new User({ name, username, password, email, phone });
+    user = new User({ fullname, username, password, email, phone });
     await user.save();
 
     // Tạo JWT

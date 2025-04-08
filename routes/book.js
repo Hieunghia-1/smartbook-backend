@@ -52,7 +52,6 @@ router.delete('/books/:id', auth, async (req, res) => {
 });
 
 router.post('/books/search', async (req, res) => {
-    console.log('search====',res)
     const { q } = req.body;
 
     try {

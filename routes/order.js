@@ -7,7 +7,7 @@ const auth = require('../middlewares/auth');
 router.get('/orders', async (req, res) => {
     try {
         const orders = await Order.find()
-        .populate('customer', 'phone email') 
+        .populate('customer', 'fullname phone email') 
         .populate('orderDetails.product', 'name price'); 
         res.status(200).json(orders);
     } catch (error) {
